@@ -27,7 +27,7 @@ import time
 
 # move -> update Person statement
 
-global layer
+layer = 0
 
 class Person:
     def __init__(self, x, y, figure):
@@ -111,7 +111,7 @@ class Gym:
             return 0
 
     def checkSurrounding(self, i, j,target):  # check surrounding objects has infect on current object, target is a tuple
-        
+        global layer
         for _i in range(-1-layer, 2+layer, 1):
             for _j in range(-1-layer, 2+layer, 1):
                 if (0 <= i + _i < self.gridHeight) and (0 <= j + _j < self.gridWidth) and self.layout[
@@ -127,6 +127,7 @@ class Gym:
                 pygame.draw.rect(self.screen, self.layout[i, j].color, rect)
 
     def updateObjCondition(self):
+        global layer
         for i in range(self.gridHeight):
             for j in range(self.gridWidth):
                 if self.layout[i, j].figure == 0:  # empty
@@ -144,26 +145,23 @@ class Gym:
                         self.layout[targetObjCoor[0], targetObjCoor[1]].figure = 4
                     # problem: location to find empty space put new create obj
                 elif self.layout[i, j].figure == 3:  # coach
-
                     targetObjCoor = self.checkSurrounding(i, j, (4, 5))
                     if targetObjCoor != 0:
                         if self.layout[targetObjCoor[0], targetObjCoor[1]].figure == 4:
                             self.layout[targetObjCoor[0], targetObjCoor[1]].figure = 2
                         else:
                             self.layout[targetObjCoor[0], targetObjCoor[1]].figure = 1
-
                 elif self.layout[i, j].figure == 4:  # fat girl
                     targetObjCoor = self.checkSurrounding(i, j, (3, -1))
                     if targetObjCoor != 0:
                         self.layout[i, j].figure = 2
-
                 elif self.layout[i, j].figure == 5:  # fat boy
                     targetObjCoor = self.checkSurrounding(i, j, (3, -1))
                     if targetObjCoor != 0:
                         self.layout[i, j].figure = 1
-
                 self.layout[i, j].colorUpdate()
                 layer+=1
+                print(layer)
 
     def generateInitRandom(self):
         self.gridHeight = int(self.windowHeight / self.blockSize)
@@ -220,7 +218,7 @@ def main():
 
         # gym.debug()
         pygame.display.update()
-        time.sleep(2)
+        time.sleep(5)
 
 
 if __name__ == "__main__":
